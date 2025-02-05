@@ -29,7 +29,7 @@ $log$
 install.packages("gridExtra")
 library(ggplot2)
 library(gridExtra)
-load("~/STA303W2025_Assignment1/portugal.RData")
+load("/cloud/project/Assignment1/portugal.RData")
 ggplot(portugal, aes(x =literacy, y = children, fill = literacy)) +
   geom_boxplot() +
   labs(title = "Family Size by Literacy",
