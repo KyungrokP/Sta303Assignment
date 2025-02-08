@@ -1,0 +1,211 @@
+---
+title: "An Analysis of effect of literacy and age of a marriage on family size using Portual data"
+author: ["Kyungrok Park", "Yushen Chen"]
+date: "Feb 4, 2025"
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+---
+
+# Introduction
+
+# Methods
+
+To examine the effects of literacy and age at marriage on family size, this study analyzes two types of regression models: Poisson regression and Negative Binomial regression. Although the temporal component of the response variable, family size, is implicit, it can be interpreted as an accumulation over a woman's reproductive lifetime, making it suitable for modeling as count data within a Poisson framework.
+
+Regarding the explanatory variables, the inclusion of the binary variable (literacy) and the categorical variable (age at marriage) is essential, as they are the primary focus of this research. Additionally, given that in Europe, fertility takes place later and is lower in cities than in rural areas (Riederer & Beaujouan, 2023), another categorical variable, regional population size, is incorporated as a key determinant of urban versus rural classification. Furthermore, in son-preferring societies, such as Korea, smaller families tend to have a higher sex ratio (number of males per 100 females) than larger families (Park, 1983). While it remains uncertain whether Portugal exhibits a strong preference for sons, this study introduces the proportion of sons among children as an additional explanatory variable. This inclusion aims not only to examine the impact of sex composition on family size but also to explore whether the data suggest any indirect indication of son preference in Portugal. Further justification and illustration of the response and explanatory variables will be discussed in the Introduction section.
+
+In addition to the standard Poisson regression, a Poisson regression with an offset (months since marriage) is analyzed to account for the accumulation of family size over a woman's reproductive lifetime and differences in exposure time. Incorporating this offset allows the model to estimate birth rates rather than the total number of children.To address overdispersion, a Negative Binomial regression with an offset (months since marriage) is also examined. As a result, three main models are analyzed: Poisson regression without an offset, Poisson regression with an offset, and Negative Binomial regression with an offset.
+
+Finally, the significance of predictors in each regression model will be assessed using confidence intervals and p-values, while residual plots will be used to evaluate the extent of variation in the response variable.
+
+# Results
+To justify which regression model is appropriate for our analysis, the nature of variables are analyzed.
+From \ref{fig:fig1}, each distribution highlights that every density plot of family size (number of children) for each condition of literacy and age of marriage has approximately a right-skewed distribution and it shows that responses (family size) can be reasonably modeled with a poisson distribution as the key variables, literacy status and age of marriage, are introduced. Furthermore, different means depending on literacy status for each plot and the fact that density of family size for illiterate females becomes greater than literate females after a certain family size (around 3~4) indicates a potential effect of literacy status of a female on family size. Additionally, different mean values for each age of marriage for same literacy status suggest a possible effect of age of marriage on family size. 
+
+Beside the regular poisson model for the family size, the research also includes years since marriage as an offset.(since the family size can be substantially determined by the years since marriage as a female with a longer marriage has a higher chance to have more children) 
+Moreover, from @tbl-tbl2, as the variance-mean ratio of family size for most of conditions (except literate females with an age of marriage at 0-15 and illiterate females with an age of marriage at 0-15) are greater than 1, it is concluded that a negative binomial model is more suitable model than the poisson model since it can explain overdispersion of a poisson model.  
+
+As a result, from @fig-fig2, it shows that the poisson model without the offset have remarkably different estimates than the poisson model and negative binomial model with the offset as the literate female is set as a reference category. Alongside the estimates, the confidence interval with 95% significance level also shows a notable difference between the poisson model without the offset and rest of two models with the offset. Especially, most of age categories for poisson and negative binomial models with the offset include a value of zero which indicates no statistical significance of 95% confidence interval. Additionally, since most of estimates follow the same trend (the estimate decreases from poisson model without the offset to the poisson model with the offset, then increases from the poisson model with the offset to negative binomial model), it confirms that the extra variability in birth rates is accounted. Finally, seeing that the proportion of sons is not significant for all three models, it is excluded from the regression model. 
+
+To finalize which model should be used in this research based on the characteristics of data, the log-likelihood test from @tbl-tbl3 is performed. 
+Since the log-likelihood values for negative binomial model with the offset (-8909.044) is higher than the log-likelihood values for two poisson models(-9239.154, -8944.741), it is determined to analyze the negative binomial with the offset as our final regression model.
+
+Finally, the interaction term between two main explanatory variables(age of marriage and literacy status) is not included in our final model.
+From @fig-fig3, it highlights that the distribution of the response variable appears similar across literacy groups within each age at marriage category, with no substantial variation in median, spread, or outliers that would indicate a strong interaction effect. This suggests that the relationship between age at marriage and the response variable does not significantly differ by literacy status. Therefore, including an interaction term between literacy and age at marriage in the regression model is unlikely to provide additional explanatory power.
+
+
+
+
+```{r, include=FALSE}
+#install.packages("knitr")
+#install.packages("ggplot2")
+#install.packages("gridExtra")
+#install.packages("stats")
+#install.packages("glmmTMB")
+#install.pakcages("dplyr")
+#install.packages("kableExtra")
+#install.packages("texreg")
+#install.packages("ggtext")
+#install.packages("jtools")
+library(ggplot2)
+library(gridExtra)
+library(knitr)
+library(stats)
+library(glmmTMB)
+library(dplyr)
+library(kableExtra)
+library(modelsummary)
+library(grid)
+library(jtools)
+library(broom)
+library(broom.mixed)
+
+load("~/STA303W2025_Assignment1/portugal.RData")
+
+```
+
+# List of Figures and Tables
+
+```{r fig1, fig.cap="*A Density plot which shows the distribution of Family size based on the Literacy Status and Age of Marriage. Notably, the density of family size for each plot has approximately a right-skewed distribution. Furthermore, although the centre of the distribution is approximately same (around the family size of 2-3), the density of family size for illiterate females becomes greater than literate females after a family size of 3, and it suggests a potential literacy effect on number of family size (children)*"}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| label: fig-fig1
+
+center_values <- portugal %>%
+    group_by(ageMarried, literacy) %>%
+    summarize(center = mean(children), .groups = "drop")
+
+ggplot(portugal, aes(x = children, fill = literacy)) +
+    geom_histogram(aes(y = after_stat(density)), binwidth = 0.8, position = "dodge", color = "black") +
+    facet_wrap(~ ageMarried) +  
+  geom_vline(data = center_values, aes(xintercept = center, color = literacy), 
+               linetype = "dashed", size = 0.3) +
+    labs(title = "Figure 1: Density of Number of Children by Age at Marriage and Literacy",
+         x = "Number of Children", 
+         y = "Density",
+         caption = "") +
+    theme_minimal()
+```
+
+
+```{r, echo=FALSE, warning=FALSE}
+portugal$prop_sons <- portugal$sons / portugal$children
+mod1 <- glm(children ~ ageMarried + literacy + region + prop_sons, data =portugal
+            , family = poisson)
+
+portugal$logyearsMarried <- log(pmax(1, portugal$monthsSinceM)/12)
+mod2 <- glm(children ~ offset(logyearsMarried) + literacy + ageMarried + region + prop_sons, data = portugal, family = poisson)
+
+mod3 <- glmmTMB(children ~ offset(logyearsMarried) + literacy + ageMarried + region + prop_sons, data = portugal, family = nbinom2)
+
+
+plot_summs(
+  mod1, mod2, mod3,
+  omit.coefs = FALSE,
+  model.names = c("w/out offset", "w/ offset", "overdispersed")
+) + ggtitle("Figure 2: Comparison of Regression Models")
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| label: fig-fig3
+
+portugal$birth_rate <- ifelse(portugal$children == 0, 
+                        0,  # If no children, set birth rate to 0
+                        portugal$children / (pmax(1, portugal$monthsSinceM) / 12))
+boxplot(portugal$birth_rate ~ portugal$literacy + portugal$ageMarried, main = "Figure 3: Distribution of Birth Rate by Literacy and Age at Marriage",
+horizontal =T,
+xlab="Birth rate",
+ylab="", las=1,
+cex.axis=0.75, cex.lab=0.75)
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| label: tbl-tbl1
+summary_table <- portugal %>%
+  group_by(literacy, ageMarried) %>%
+  summarise(
+    mean_family_size = mean(children),
+    var_family_size = var(children),
+    .groups = 'drop'
+  )
+
+summary_table$vmr <- summary_table$var_family_size / summary_table$mean_family_size
+kable(summary_table, caption = "Mean and Variance of children by Literacy Status and Age at Marriage") %>%
+  footnote("hello")
+
+```
+
+
+
+
+```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| label: tbl-tbl2
+
+
+model1 <- glm(children ~ ageMarried + literacy + region, data =portugal
+            , family = poisson)
+
+portugal$logyearsMarried <- log(pmax(1, portugal$monthsSinceM)/12)
+model2 <- glm(children ~ offset(logyearsMarried) + literacy + ageMarried + region, data = portugal, family = poisson)
+
+model3 <- glmmTMB(children ~ offset(logyearsMarried) + literacy + ageMarried + region, data = portugal, family = nbinom2)
+log_lik_values <- data.frame(
+  Model = c("Poisson (No Offset)", 
+            "Poisson (With Offset)", 
+            "Negative Binomial (With Offset)"),
+  Log_Likelihood = c(logLik(model1)[1], logLik(model2)[1], logLik(model3)[1])  # Extract log-likelihoods
+)
+
+# Print log-likelihood values in a clean table format
+kable(log_lik_values, caption = "Log-Likelihood Comparison of Models")
+```
+
+
+```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| label: tbl-tbl3
+
+# Extract model summary and exponentiate coefficients
+summary_table_exp <- tidy(model3, conf.int = TRUE, conf.level = 0.95) %>%
+  mutate(
+    exp_estimate = exp(estimate),         # Exponentiate coefficient
+    exp_conf.low = exp(conf.low),         # Exponentiate lower bound
+    exp_conf.high = exp(conf.high)        # Exponentiate upper bound
+  ) %>%
+  select(term, exp_estimate, std.error, statistic, p.value, exp_conf.low, exp_conf.high) %>%
+  rename(
+    "Predictor" = term,
+    "IRR (Exp Coeff)" = exp_estimate,   # Rename for interpretation
+    "Std. Error" = std.error,
+    "z-Statistic" = statistic,
+    "p-Value" = p.value,
+    "2.5% CI (IRR)" = exp_conf.low,
+    "97.5% CI (IRR)" = exp_conf.high
+  )
+
+# Display formatted table
+kable(summary_table_exp, caption = "Exponentiated Model Coefficients (Incident Rate Ratios)") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
+  column_spec(1, bold = TRUE)
+```
+
+
