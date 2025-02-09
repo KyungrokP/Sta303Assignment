@@ -213,6 +213,13 @@ kable(summary_table_exp, caption = "Exponentiated Model Coefficients (Incident R
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
   column_spec(1, bold = TRUE)
 ```
+
 # Conclusion
 Overall,  our analysis uses the Negative Binomial regression model as the variance-mean ratio of the Poisson regression model exceeds 1, which indicates the negative binomial model is better. The log-likelihood test also confirmed that the negative binomial model with the offset outperforms both Poisson models, making it the most appropriate choice. Moreover, there is no substantial evidence of an interaction effect between literacy status and age at marriage, indicating that these variables affect family size independently. In conclusion, literacy and age at marriage impacted the family size in Portugal in the 1980s. Women who are married between 15 and 18 and between 18 and 20 are more likely to have a higher birth rate in Portugal. Women marrying between 15-20 years old have an around 10% higher incidence rate compared with those who married later. It is similar to Ekorinano et al. (2023)'s research in Indonesia, which found that women who married before they were 25 years old tend to have a long reproductive period. Also, Portugal is not a son-preferred country like Korea since the proportion of sons is not significant, and it was excluded from the model.
 
+\pagebreak
+# Reference
+Ariho, P., & Kabagenyi, A. (2020). Age at first marriage, age at first sex, family size preferences, contraception and change in fertility among women in Uganda: Analysis of the 2006–2016 period. BMC Women’s Health, 20(1). https://doi.org/10.1186/s12905-020-0881-4 
+Ekoriano, M., Muthmainnah, M., Titisari, A., Devi, Y. P., Widodo, T., & Purwoko, E. (2023). The average age of first marriage for Indonesian women in their reproductive period who give birth to an average of two children: National survey (2017 – 2019). F1000Research, 12, 35. https://doi.org/10.12688/f1000research.126816.1 
+Kebede, E., Goujon, A., & Lutz, W. (2019). Stalls in Africa’s fertility decline partly result from disruptions in female education. Proceedings of the National Academy of Sciences, 116(8), 2891–2896. https://doi.org/10.1073/pnas.1717288116 
+Pimentel, D., & Sousa Gomes, C. (2022). Beyond the crisis: Fertility variations and the family policies in the Portuguese municipalities. Espace Populations Sociétés, 2022/2–3. https://doi.org/10.4000/eps.12990 
