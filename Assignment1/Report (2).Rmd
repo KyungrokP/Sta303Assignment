@@ -15,7 +15,7 @@ Fertility trends have been closely linked to the demographic transition in Portu
 
 Kebede et al. (2019) indicate that the fertility rates in sub-Saharan countries kept declining until 2000. This interruption of the decreasing birth rate seems to be connected to the disruptions in women’s education (Kebede et al., 2019). Meanwhile, the decline in fertility in Indonesia and Uganda shows that age at marriage also affects the fertility rates. Ekoriano et al. (2023) state women in Indonesia who married before the age of 25 tend to have a longer reproductive period which could result in giving birth to more children compared with the women who married after 25 years old. Likewise, Ariho & Kabagenyi (2020) indicate that raising the age of first marriage can significantly decrease the birth rate in Uganda. Both the fertility data from Indonesia and Uganda suggest women delaying their marriage could lead them to have relatively fewer children, which results in a smaller family size. So, it is significant to consider women's literacy level and their marriage ages while studying the family size, as higher illiteracy rates often correlate with increased birth rates, and earlier marriage ages can also contribute to larger families.
 
-Therefore, this research aims to examine how literacy and age at marriage influence family size in Portugal by using the Poisson regression and negative binomial regression. Additionally, it will explore the other variations, such as the impact of the number of sons and regional differences on family size
+Therefore, this research aims to examine how literacy and age at marriage influence family size in Portugal by using the Poisson regression and negative binomial regression. 
 
 # Methods
 To examine the effects of literacy and age at marriage on family size, this study analyzes two types of regression models: Poisson regression and Negative Binomial regression. Although the temporal component of the response variable, family size, is implicit, it can be interpreted as an accumulation over a woman's reproductive lifetime, making it suitable for modeling as count data within a Poisson framework.
@@ -213,5 +213,6 @@ kable(summary_table_exp, caption = "Exponentiated Model Coefficients (Incident R
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed")) %>%
   column_spec(1, bold = TRUE)
 ```
-
+# Conclusion
+In conclusion, literacy and age at marriage impacted the family size in Portugal in the 1980s. Women who are married between 15 and 18 and between 18 and 20 are more likely to have a higher birth rate in Portugal. It is similar to Ekorinano et al. (2023)'s research research in Indonesia, which found that women married before they were 25 years old tend to have a long reproductive period.
 
