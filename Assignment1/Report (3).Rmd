@@ -1,6 +1,6 @@
 ---
 title: "An Analysis of effect of literacy and age of a marriage on family size using Portual data"
-author: ["Kyungrok Park", "Yushen Chen"]
+author: ["Kyungrok Park", "Yushan Chen"]
 date: "Feb 10, 2025"
 output:
   pdf_document:
